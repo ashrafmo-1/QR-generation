@@ -3,20 +3,143 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://api.qrserver.com">
   <link rel="stylesheet" href="./master.css">
-  <title>Document</title>
+  <title>QR Forge — Advanced QR Code Generator</title>
 </head>
 <body>
+  <div class="bg-orbs" aria-hidden="true">
+    <span class="orb orb-1"></span>
+    <span class="orb orb-2"></span>
+    <span class="orb orb-3"></span>
+  </div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">▦</span>
+      <span class="brand-name">QR Forge</span>
+    </div>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle light / dark theme">
+      <span class="theme-icon">🌙</span>
+    </button>
+  </header>
+
   <main>
     <div class="app_box">
-      <h1 class="title">make your QR code</h1>
-      <input class="dataInput" type="text" name="text" id="text" placeholder="inter your link">
-      <button class="generation">get your qr code</button>
-      <div class="imageQrBox">
-        <img class="imgQr" src="" alt="">
+
+      <div class="panel panel-input">
+        <h1 class="title">Craft your QR code</h1>
+        <p class="subtitle">Pick a type, customize the look, generate instantly.</p>
+
+        <div class="type-tabs" id="typeTabs">
+          <button class="tab active" data-type="url">🔗 Link</button>
+          <button class="tab" data-type="text">📝 Text</button>
+          <button class="tab" data-type="wifi">📶 WiFi</button>
+          <button class="tab" data-type="email">✉️ Email</button>
+          <button class="tab" data-type="phone">📞 Phone</button>
+          <button class="tab" data-type="sms">💬 SMS</button>
+          <button class="tab" data-type="vcard">👤 Contact</button>
+        </div>
+
+        <div class="fields" id="fields">
+          <!-- Rendered dynamically by JS based on selected type -->
+        </div>
+
+        <div class="advanced">
+          <button class="advanced-toggle" id="advancedToggle" type="button">
+            <span>⚙️ Advanced options</span>
+            <span class="chevron">▾</span>
+          </button>
+
+          <div class="advanced-body" id="advancedBody">
+           <div class="advanced-body-inner">
+            <div class="field-row">
+              <label for="sizeRange">Size <span id="sizeVal">280</span>px</label>
+              <input type="range" id="sizeRange" min="120" max="600" step="10" value="280">
+            </div>
+
+            <div class="field-row">
+              <label for="marginRange">Quiet zone <span id="marginVal">2</span></label>
+              <input type="range" id="marginRange" min="0" max="10" step="1" value="2">
+            </div>
+
+            <div class="field-row two-col">
+              <div>
+                <label for="fgColor">Foreground</label>
+                <input type="color" id="fgColor" value="#0f172a">
+              </div>
+              <div>
+                <label for="bgColor">Background</label>
+                <input type="color" id="bgColor" value="#ffffff">
+              </div>
+            </div>
+
+            <div class="field-row two-col">
+              <label class="checkbox">
+                <input type="checkbox" id="transparentBg">
+                <span>Transparent background</span>
+              </label>
+            </div>
+
+            <div class="field-row two-col">
+              <div>
+                <label for="eccLevel">Error correction</label>
+                <select id="eccLevel">
+                  <option value="L">L — Low (7%)</option>
+                  <option value="M" selected>M — Medium (15%)</option>
+                  <option value="Q">Q — Quartile (25%)</option>
+                  <option value="H">H — High (30%)</option>
+                </select>
+              </div>
+              <div>
+                <label for="formatSelect">Format</label>
+                <select id="formatSelect">
+                  <option value="png" selected>PNG</option>
+                  <option value="svg">SVG</option>
+                </select>
+              </div>
+            </div>
+           </div>
+          </div>
+        </div>
+
+        <button class="generation" id="generateBtn" type="button">
+          <span class="btn-icon">✨</span> Generate QR code
+        </button>
       </div>
+
+      <div class="panel panel-output">
+        <div class="imageQrBox" id="qrBox">
+          <div class="qr-placeholder" id="qrPlaceholder">
+            <span class="qr-placeholder-icon">▦</span>
+            <p>Your QR code will appear here</p>
+          </div>
+          <img class="imgQr" id="qrImage" src="" alt="Generated QR code" hidden>
+          <div class="qr-loading" id="qrLoading" hidden>
+            <span class="spinner"></span>
+          </div>
+        </div>
+
+        <div class="output-actions" id="outputActions" hidden>
+          <button class="action-btn" id="downloadBtn" type="button">⬇ Download</button>
+          <button class="action-btn" id="copyImgBtn" type="button">📋 Copy image</button>
+          <button class="action-btn" id="copyDataBtn" type="button">🔗 Copy data</button>
+        </div>
+
+        <section class="history" id="historySection" hidden>
+          <div class="history-head">
+            <h2>Recent</h2>
+            <button class="clear-history" id="clearHistory" type="button">Clear</button>
+          </div>
+          <div class="history-list" id="historyList"></div>
+        </section>
+      </div>
+
     </div>
   </main>
+
+  <div class="toast" id="toast"></div>
+
   <script src="./index.js"></script>
 </body>
 </html>
